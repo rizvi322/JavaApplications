@@ -1,151 +1,138 @@
 package polygonarea;
 
-import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import javax.swing.DefaultListModel;
 import models.*;
-import views.MainFrame;
 import utils.Utilities;
+import views.MainFrame;
 
-public class PolygonArea
-{
+public class PolygonArea {
 
     private MainFrame mainFrame = new MainFrame();
     private Factory factory = new ModelFactory();
-    private List<Shape> poligons = new ArrayList<Shape>();
-    private DefaultListModel poligonList;
+    private List<Shape> polygons = new ArrayList<Shape>();
+    private DefaultListModel polygonList;
 
-    public PolygonArea()
-    {
+    public PolygonArea() {
 
         mainFrame.setTitle("Polygon Area Calculation");
         mainFrame.setVisible(true);
 
-        mainFrame.addCalculateActionListener(new ActionListener()
-        {
+        //Setting ShapeType Combo Box action listener
+        mainFrame.addShapeTypeActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                String shape, stringOne, stringTwo;
-                Double paramOne, paramTwo;
-                paramOne = new Double(0);
-                paramTwo = new Double(0);
+            public void actionPerformed(ActionEvent e) {
 
-                //Fetching Data from the MainFrame
-                shape = mainFrame.getShapeType();
+                String shapeName = mainFrame.getShapeType();
+                getShapeFormView(shapeName);
+            }
+        });
+
+        //Setting Calculate Button action listener
+        mainFrame.addCalculateActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String shapeName, stringOne, stringTwo;
+                boolean one = true;
+                boolean two = true;
+                shapeName = mainFrame.getShapeType();
+
+                //Creating the Shape object and params list
+                Shape shape = (Shape) factory.createInstance(shapeName);
+                List<Double> params = new ArrayList<Double>();
+
+                //Checking whether paramOne is convertable or not
                 stringOne = mainFrame.getParamOne();
-                stringTwo = mainFrame.getParamTwo();
-                
-                if (shape.equalsIgnoreCase("circle")
-                        || shape.equalsIgnoreCase("square"))
-                {
-                    String isConvertable = Utilities.convertable(stringOne);
-                    if (isConvertable.equals("ok"))
-                    {
-                        paramOne = Utilities.convert(stringOne);
-                        paramTwo = new Double(0);
-                        calculate(shape, paramOne, paramTwo);
-                    }
-                    else
-                    {
-                        mainFrame.setParamOneError(isConvertable);
-                    }
-                }
-                else if (shape.equalsIgnoreCase("rectangle")
-                        || shape.equalsIgnoreCase("triangLe")
-                        || shape.equalsIgnoreCase("parallelogram"))
-                {
-                    boolean one = false;
-                    boolean two = false;
-                    String isConvertable = Utilities.convertable(stringOne);
-                    if (isConvertable.equals("ok"))
-                    {
-                        paramOne = Utilities.convert(stringOne);
-                        one = true;
-                    }
-                    else
-                    {
-                        mainFrame.setParamOneError(isConvertable);
-                    }
+                String isConvertable = Utilities.convertable(stringOne);
+                if (isConvertable.equals("ok")) {
 
+                    //Converting paramOne and adding into params list
+                    double paramOne = Utilities.convert(stringOne);
+                    params.add(paramOne);
+                } else {
+
+                    one = false;
+                    mainFrame.setParamOneError(isConvertable);
+                }
+                if (shape.getNoOfParameters() == 2) {
+
+                    //Checking whether paramOne is convertable or not
+                    stringTwo = mainFrame.getParamTwo();
                     isConvertable = Utilities.convertable(stringTwo);
-                    if (isConvertable.equals("ok"))
-                    {
-                        paramTwo = Utilities.convert(stringTwo);
-                        two = true;
-                    }
-                    else
-                    {
+                    if (isConvertable.equals("ok")) {
+
+                        //Converting paramOne and adding into params list
+                        double paramTwo = Utilities.convert(stringTwo);
+                        params.add(paramTwo);
+                    } else {
+
+                        two = false;
                         mainFrame.setParamTwoError(isConvertable);
                     }
-
-                    if (one == true && two == true)
-                    {
-                        calculate(shape, paramOne, paramTwo);
-                    }
-
                 }
 
+                if (one == two == true) {
+                    //Calculating and Setting areaValue
+                    shape.setParameters(params);
+                    double areaValue = shape.calculateArea();
+                    mainFrame.setAreaValue(Double.toString(areaValue));
+
+                    //Setting Shape into the list
+                    polygons.add(shape);
+                    Collections.sort(polygons);
+                    Iterator i = polygons.iterator();
+                    polygonList = new DefaultListModel();
+                    while (i.hasNext()) {
+                        polygonList.addElement(i.next());
+                    }
+                    mainFrame.setPolygonList(polygonList);
+                }
             }
         });
     }
 
-    private void calculate(String shape, double paramOne, double paramTwo)
-    {
-        if (shape.equalsIgnoreCase("triangle"))
-        {
-            Triangle triangle = (Triangle) factory.createInstance(shape);
-            triangle.setBase(paramOne);
-            triangle.setHeight(paramTwo);
-            mainFrame.setAreaValue(triangle.calculateArea());
-            poligons.add(triangle);
+    // Defining The Mainframe Form view For Different Select Types
+    private void getShapeFormView(String shapeName) {
+
+        if (shapeName.equalsIgnoreCase("select")) {
+            mainFrame.setFormVisibility(false);
+        } else {
+            Shape shape = (Shape) factory.createInstance(shapeName);
+            List<String> params = shape.getParametersNames();
+
+            mainFrame.setAreaValue("");
+            mainFrame.setParamOneError("");
+            mainFrame.setParamTwoError("");
+            mainFrame.setParamOne("");
+            mainFrame.setParamTwo("");
+
+            if (shape.getNoOfParameters() == 2) {
+                mainFrame.setFormVisibility(false);
+                mainFrame.setParamOneLabel(params.get(0));
+                mainFrame.setParamTwoLabel(params.get(1));
+                mainFrame.setParamOneFieldVisibility(true);
+                mainFrame.setParamTwoFieldVisibility(true);
+                mainFrame.setFormVisibility(true);
+            } else {
+                mainFrame.setFormVisibility(false);
+                mainFrame.setParamOneLabel(params.get(0));
+                mainFrame.setParamTwoLabel("");
+                mainFrame.setParamOneFieldVisibility(true);
+                mainFrame.setParamTwoFieldVisibility(false);
+                mainFrame.setFormVisibility(true);
+            }
         }
-        else if (shape.equalsIgnoreCase("rectangle"))
-        {
-            Rectangle rectangle = (Rectangle) factory.createInstance(shape);
-            rectangle.setWidth(paramOne);
-            rectangle.setHeight(paramTwo);
-            mainFrame.setAreaValue(rectangle.calculateArea());
-            poligons.add(rectangle);
-        }
-        else if (shape.equalsIgnoreCase("square"))
-        {
-            Square square = (Square) factory.createInstance(shape);
-            square.setLength(paramOne);
-            mainFrame.setAreaValue(paramTwo);
-            poligons.add(square);
-        }
-        else if (shape.equalsIgnoreCase("parallelogram"))
-        {
-            Parallelogram parallelogram = (Parallelogram) factory.createInstance(shape);
-            parallelogram.setBase(paramOne);
-            parallelogram.setHeight(paramTwo);
-            mainFrame.setAreaValue(parallelogram.calculateArea());
-            poligons.add(parallelogram);
-        }
-        else if (shape.equalsIgnoreCase("circle"))
-        {
-            Circle circle = (Circle) factory.createInstance(shape);
-            circle.setRadius(paramOne);
-            mainFrame.setAreaValue(circle.calculateArea());
-            poligons.add(circle);
-        }
-        Collections.sort(poligons);
-        Iterator i = poligons.iterator();
-        poligonList = new DefaultListModel();
-        while (i.hasNext())
-        {
-            poligonList.addElement(i.next());
-        }
-        mainFrame.setPolygonList(poligonList);
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         new PolygonArea();
     }
 }

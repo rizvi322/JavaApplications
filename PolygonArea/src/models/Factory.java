@@ -1,7 +1,6 @@
 package models;
 
-public interface Factory
-{
+public interface Factory {
 
     Object createInstance(String id);
 }

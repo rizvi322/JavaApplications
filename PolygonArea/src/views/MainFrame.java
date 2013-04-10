@@ -1,69 +1,82 @@
 package views;
 
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import javax.swing.ListModel;
 
-public class MainFrame extends javax.swing.JFrame
-{
+public class MainFrame extends javax.swing.JFrame {
 
-    public MainFrame()
-    {
+    public MainFrame() {
         initComponents();
         form.setVisible(false);
     }
 
     //Getters and Setters
-    public void setAreaValue(Double areaValue)
-    {
-        this.areaValue.setText(Double.toString(areaValue));
+    public void setFormVisibility(boolean flag) {
+        form.setVisible(flag);
     }
 
-    public String getParamOne()
-    {
+    public void setAreaValue(String areaValue) {
+        this.areaValue.setText(areaValue);
+    }
+
+    public String getParamOne() {
         paramOneError.setText("");
         return paramOne.getText();
     }
-
-    public void setParamOne(String paramOne)
-    {
-
+    
+    public void setParamOne(String paramOne) {
         this.paramOne.setText(paramOne);
     }
 
-    public String getParamTwo()
-    {
-        paramTwoError.setText("");
-        return paramTwo.getText();
+    public void setParamOneLabel(String paramOneLabel) {
+
+        this.paramOneLabel.setText(paramOneLabel);
     }
 
-    public void setParamTwo(String paramTwo)
-    {
-        this.paramTwo.setText(paramTwo);
-    }
-
-    public String getShapeType()
-    {
-        return (String) shapeType.getSelectedItem();
-    }
-
-    public void addCalculateActionListener(ActionListener listener)
-    {
-        calculate.addActionListener(listener);
-    }
-
-    public void setPolygonList(ListModel polygonList)
-    {
-        this.polygonList.setModel(polygonList);
-    }
-
-    public void setParamOneError(String paramOneError)
-    {
+    public void setParamOneError(String paramOneError) {
         this.paramOneError.setText(paramOneError);
     }
 
-    public void setParamTwoError(String paramTwoError)
-    {
+    public void setParamOneFieldVisibility(boolean flag) {
+        paramOne.setVisible(flag);
+    }
+
+    public String getParamTwo() {
+        paramTwoError.setText("");
+        return paramTwo.getText();
+    }
+    
+    public void setParamTwo(String paramTwo) {
+        this.paramTwo.setText(paramTwo);
+    }
+
+    public void setParamTwoLabel(String paramTwoLabel) {
+        this.paramTwoLabel.setText(paramTwoLabel);
+    }
+
+    public void setParamTwoFieldVisibility(boolean flag) {
+        paramTwo.setVisible(flag);
+    }
+
+    public void setParamTwoError(String paramTwoError) {
         this.paramTwoError.setText(paramTwoError);
+    }
+
+    public String getShapeType() {
+        return (String) shapeType.getSelectedItem();
+    }
+
+    public void addCalculateActionListener(ActionListener listener) {
+        calculate.addActionListener(listener);
+    }
+
+    public void addShapeTypeActionListener(ActionListener listener) {
+        shapeType.addActionListener(listener);
+    }
+
+    public void setPolygonList(ListModel polygonList) {
+        this.polygonList.setModel(polygonList);
     }
 
     /**
@@ -73,8 +86,7 @@ public class MainFrame extends javax.swing.JFrame
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
         shapeType = new javax.swing.JComboBox();
@@ -97,13 +109,6 @@ public class MainFrame extends javax.swing.JFrame
         jLabel1.setText("Select Shape:");
 
         shapeType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select", "Triangle", "Rectangle", "Square", "Parallelogram", "Circle" }));
-        shapeType.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                shapeTypeActionPerformed(evt);
-            }
-        });
 
         jLabel5.setText("List Of Shapes");
 
@@ -192,7 +197,7 @@ public class MainFrame extends javax.swing.JFrame
                                 .addComponent(shapeType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel5)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(250, Short.MAX_VALUE))))
+                        .addContainerGap(282, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,111 +218,36 @@ public class MainFrame extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void shapeTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shapeTypeActionPerformed
-        // TODO add your handling code here:
-
-        String shape = (String) shapeType.getSelectedItem();
-        areaValue.setText("");
-        paramOne.setText("");
-        paramTwo.setText("");
-        paramOneError.setText("");
-        paramTwoError.setText("");
-        if (shape.equalsIgnoreCase("triangle"))
-        {
-            form.setVisible(false);
-            paramOneLabel.setText("Base:");
-            paramOne.setVisible(true);
-            paramTwoLabel.setText("Height:");
-            paramTwo.setVisible(true);
-            form.setVisible(true);
-        }
-        else if (shape.equalsIgnoreCase("rectangle"))
-        {
-            form.setVisible(false);
-            paramOneLabel.setText("Base:");
-            paramOne.setVisible(true);
-            paramTwoLabel.setText("Height:");
-            paramTwo.setVisible(true);
-            form.setVisible(true);
-        }
-        else if (shape.equalsIgnoreCase("square"))
-        {
-            form.setVisible(false);
-            paramOneLabel.setText("Length:");
-            paramOne.setVisible(true);
-            paramTwoLabel.setText("");
-            paramTwo.setVisible(false);
-            form.setVisible(true);
-        }
-        else if (shape.equalsIgnoreCase("parallelogram"))
-        {
-            form.setVisible(false);
-            paramOneLabel.setText("Base:");
-            paramOne.setVisible(true);
-            paramTwoLabel.setText("Height:");
-            paramTwo.setVisible(true);
-            form.setVisible(true);
-        }
-        else if (shape.equalsIgnoreCase("circle"))
-        {
-            form.setVisible(false);
-            paramOneLabel.setText("Radius:");
-            paramOne.setVisible(true);
-            paramTwoLabel.setText("");
-            paramTwo.setVisible(false);
-            form.setVisible(true);
-        }
-        else
-        {
-            form.setVisible(false);
-        }
-
-    }//GEN-LAST:event_shapeTypeActionPerformed
-
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[])
-    {
+    public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try
-        {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
-            {
-                if ("Nimbus".equals(info.getName()))
-                {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        }
-        catch (ClassNotFoundException ex)
-        {
+        } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        catch (InstantiationException ex)
-        {
+        } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        catch (IllegalAccessException ex)
-        {
+        } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        catch (javax.swing.UnsupportedLookAndFeelException ex)
-        {
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable()
-        {
-            public void run()
-            {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
                 new MainFrame().setVisible(true);
             }
         });
